@@ -1,0 +1,11 @@
+# Vercel project build & dependency artifacts
+node_modules/
+frontend/node_modules/
+frontend/dist/
+.vercel/
+*.tsbuildinfo
+
+# Local env (never commit secrets)
+.env
+.env.local
+.env.*.local

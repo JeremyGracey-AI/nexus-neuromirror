@@ -1,0 +1,22 @@
+{
+  "name": "nexus-neuromirror-vercel",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "description": "GitHub-backed Vercel deployment of the NeXus NeuroMirror EEG QC prototype dashboard.",
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "dev": "vercel dev",
+    "typecheck": "tsc --noEmit && npm --prefix frontend run typecheck",
+    "lint": "npm --prefix frontend run lint",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@vercel/node": "^3.2.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}
