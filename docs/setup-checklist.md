@@ -53,8 +53,10 @@ is usually enough.
 - [ ] Confirm **ground** wired to the manufacturer-approved site
 - [ ] Set the EEG **sample rate** (commonly 256 Hz) and record it in the log
 - [ ] Configure a hardware/software **notch** for local mains (50 or 60 Hz)
-- [ ] Run an **impedance check**: target ≤ 5 kΩ, accept ≤ 10 kΩ; re-prep any
-      channel above target
+- [ ] Run an **impedance / signal-quality check** per BioTrace+ / Mind Media
+      guidance for your hardware and electrode type; balance impedances across
+      channels and re-prep any channel that reads noticeably worse than the rest
+      (no fixed NeXus-10 threshold is asserted here)
 - [ ] Confirm live traces look like EEG (blink artifacts on frontal channels;
       alpha rises at **Oz** when the participant closes their eyes)
 
@@ -125,6 +127,6 @@ nexus-neuromirror verify data/anon-001_block-01_diagnostic.edf \
 ## Session quick-check (returning sessions)
 - [ ] Amplifier charged, link stable
 - [ ] Same 4-channel BioTrace+ profile loaded; **same reference**
-- [ ] Ground per manual; impedances ≤ target
+- [ ] Ground per manual; impedances balanced per BioTrace+/Mind Media guidance
 - [ ] Markers configured; export set to **EDF+**
 - [ ] Post-export `verify` returns exit 0

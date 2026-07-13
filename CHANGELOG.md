@@ -6,6 +6,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- Docs: point the Brain Invaders reference at the adaptive vs. non-adaptive
+  P300 dataset (`zenodo.org/records/2669187`) and the REVE checkpoint at
+  `huggingface.co/brain-bzh/reve-base`.
+- Docs/config: removed unsourced numeric impedance thresholds; defer to
+  BioTrace+ / Mind Media signal-quality guidance instead.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

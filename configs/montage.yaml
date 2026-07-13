@@ -43,7 +43,12 @@ montage:
       Do not improvise ground placement. Follow the exact site specified in the
       Mind Media NeXus-10 / BioTrace+ documentation for your hardware revision.
 
-  # Impedance target for a comfortable, clean 4-channel setup.
+  # Impedance / signal quality: no fixed NeXus-10 threshold is asserted here.
+  # Follow BioTrace+ / Mind Media signal-quality guidance for your hardware and
+  # electrode type, and keep impedances balanced across channels.
   impedance:
-    target_kohm_max: 10
-    preferred_kohm_max: 5
+    guidance: "per-biotrace-mindmedia"
+    note: >
+      Use the BioTrace+ / Mind Media signal-quality indicators for your
+      hardware and electrode type; balance impedances across channels rather
+      than targeting an unsourced numeric limit.

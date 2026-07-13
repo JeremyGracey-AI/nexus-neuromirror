@@ -35,7 +35,10 @@ real-time SDK is described in [`docs/architecture.md`](docs/architecture.md).
   identical across every session.
 - **Ground:** **manufacturer-approved placement only** — follow the Mind Media
   NeXus-10 / BioTrace+ manual for your hardware revision. Do not improvise.
-- **Impedance target:** ≤ 5 kΩ preferred, ≤ 10 kΩ acceptable.
+- **Impedance / signal quality:** follow the BioTrace+ / Mind Media
+  signal-quality guidance for your hardware and electrode type, and balance
+  impedances across channels. (No official NeXus-10 impedance limit is cited
+  here, so no fixed threshold is asserted.)
 
 Full definition: [`configs/montage.yaml`](configs/montage.yaml).
 
@@ -137,14 +140,14 @@ are for **manuals and export documentation only** — no real-time SDK is implie
 - Mind Media — BioTrace+ software & NeXus manuals / data export:
   <https://www.mindmedia.com/en/support/downloads/> and
   <https://www.mindmedia.com/en/products/biotrace-software/>
-- Brain Invaders P300 dataset (Zenodo):
-  <https://zenodo.org/record/2649069>
+- Brain Invaders adaptive vs. non-adaptive P300 dataset (Zenodo):
+  <https://zenodo.org/records/2669187>
 - PhysioNet EEG Motor Movement/Imagery Dataset (EEGMMIDB):
   <https://physionet.org/content/eegmmidb/1.0.0/>
 - CBraMod (EEG foundation model, code):
   <https://github.com/wjq-learning/CBraMod>
 - REVE (EEG model on Hugging Face):
-  <https://huggingface.co/RobinWeiler/REVE>
+  <https://huggingface.co/brain-bzh/reve-base>
 - MNE-Python (EDF/EDF+ IO and analysis):
   <https://mne.tools/stable/index.html>
 - EDF / EDF+ format specification:
