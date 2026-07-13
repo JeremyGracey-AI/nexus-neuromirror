@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# EEG recordings — do not commit real neural data
+data/**
+!data/README.md
+*.edf
+*.bdf
+
+# Generated experiment outputs (metrics, plots, demo data)
+outputs/**
+!outputs/README.md
+# Exception: a small, reproducible set of *synthetic* demo artifacts is committed
+# as reference output (see outputs/demo/README.md). The large raw demo CSV is
+# still excluded and is regenerated with `neuralset-scaffold demo`.
+!outputs/demo/
+!outputs/demo/*.png
+!outputs/demo/metrics.json
+!outputs/demo/README.md
+outputs/demo/*.csv
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp

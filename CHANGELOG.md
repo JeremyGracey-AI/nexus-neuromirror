@@ -6,6 +6,21 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+- `docs/research/`: the NeuroMirror research thesis
+  (`neuromirror-research-thesis.md`) and the NeuralSet integration spec
+  (`neuralset-integration-spec.md`), with inline citations preserved.
+- `experiments/neuralset-experiment/`: a standalone, separately-packaged
+  executable baseline scaffold (validate → preprocess → window → bandpower
+  features → session-aware CV classifier → metrics/plots) with a synthetic `demo`
+  command, its own test suite, and an optional NeuralSet adapter seam. Committed
+  synthetic reference outputs (plots + `metrics.json`) are included; the large
+  raw demo CSV is regenerated, not committed.
+- README and `docs/architecture.md`: a "Research & experiments" section
+  explaining how the experiment relates to the web UI and the NeuralSet adapter
+  boundary (runtime verifies/reports; experiment models offline; NeuralSet is an
+  optional research seam).
+
 ### Changed
 - Docs: point the Brain Invaders reference at the adaptive vs. non-adaptive
   P300 dataset (`zenodo.org/records/2669187`) and the REVE checkpoint at

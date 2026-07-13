@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neuralset-experiment-scaffold"
+version = "0.1.0"
+description = "First-experiment scaffold for four-channel NeXus-10/BioTrace EEG exports: validate, preprocess, window, feature-extract, and train a baseline classifier with session-aware splits."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "NeuralSet experiment scaffold contributors" }]
+keywords = ["eeg", "nexus-10", "biotrace", "neurofeedback", "scikit-learn"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+]
+
+# Lightweight, widely-available scientific Python stack.
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=1.5",
+    "scikit-learn>=1.2",
+    "matplotlib>=3.7",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.4",
+]
+# Optional integration boundary. The scaffold runs fully without this; the
+# adapter degrades gracefully when the dependency is absent.
+neuralset = [
+    "neuralset",
+]
+
+[project.scripts]
+neuralset-scaffold = "neuralset_scaffold.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+neuralset_scaffold = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

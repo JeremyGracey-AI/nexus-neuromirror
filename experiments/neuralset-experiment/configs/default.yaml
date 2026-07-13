@@ -1,0 +1,44 @@
+# Default configuration for the NeuralSet experiment scaffold.
+# Copy and edit for your own recordings.
+
+# Exactly four canonical channels (midline chain).
+channels: ["Fz", "FCz", "Pz", "Oz"]
+
+columns:
+  time: "time"                 # optional; sample rate inferred from it if present
+  sample_rate_hz: 256.0        # fallback / cross-check when no time column
+  marker: "marker"             # per-sample event labels ("" / 0 == no event)
+  session: "session"           # session id per row (enables session-aware CV)
+  # Accepted header aliases per channel (normalized, affix-aware match).
+  channel_aliases:
+    Fz:  ["EEG Fz", "Fz-A1A2", "Ch1"]
+    FCz: ["EEG FCz", "FCz-A1A2", "Ch2"]
+    Pz:  ["EEG Pz", "Pz-A1A2", "Ch3"]
+    Oz:  ["EEG Oz", "Oz-A1A2", "Ch4"]
+
+preprocess:
+  notch_hz: [50.0]             # set [60.0] for 60 Hz mains regions
+  bandpass_hz: [1.0, 45.0]
+  resample_hz: 200.0
+  # Artifact FLAGS (microvolts). Samples are flagged, never deleted.
+  artifact_amp_uv: 150.0
+  artifact_grad_uv: 75.0
+
+windows:
+  length_s: 2.0                # must be within [1, 4]
+  offset_s: 0.0                # window start relative to marker onset
+  max_artifact_fraction: 0.5   # drop a window if more than this fraction is flagged
+
+# Spectral feature bands (Hz). Absolute (log) + relative band power per channel.
+features:
+  delta: [1.0, 4.0]
+  theta: [4.0, 8.0]
+  alpha: [8.0, 13.0]
+  beta:  [13.0, 30.0]
+  gamma: [30.0, 45.0]
+
+model:
+  kind: "logreg"               # "logreg" or "lda"
+  n_splits: 5                  # GroupKFold splits (or leave-one-session-out)
+  standardize: true
+  random_state: 17

@@ -202,6 +202,85 @@ Tests: `cd web/backend && python -m pytest` (backend);
 `cd web/frontend && npm run typecheck && npm run lint && npm run build`
 (frontend). See [`web/README.md`](web/README.md) for details.
 
+## Research & experiments
+
+Three design/research deliverables accompany the runtime code. They are
+**documentation and a standalone experiment** — none of them change the
+verifier, the web dashboard, or the runtime data path, and none of them add a
+dependency to the CLI or the web backend.
+
+### Reports (`docs/research/`)
+
+- [`docs/research/neuromirror-research-thesis.md`](docs/research/neuromirror-research-thesis.md)
+  — a falsifiable research program for multimodal-supervised cognitive-state
+  modeling and sham-controlled closed-loop testing on the four-channel montage.
+  It defines the *science* (hypotheses, operational constructs, controls,
+  stopping rules), explicitly fences off consciousness/thought-decoding claims,
+  and treats the four-channel montage as a hard constraint on spatial inference.
+- [`docs/research/neuralset-integration-spec.md`](docs/research/neuralset-integration-spec.md)
+  — an implementation-ready spec for making BioTrace+ EDF/EDF+ sessions
+  consumable by [NeuralSet](https://github.com/facebookresearch/neuroai/) (Meta
+  FAIR's Neuro-AI data-engineering framework). It maps NeuroMirror concepts onto
+  NeuralSet's Events/Extractors/Segmenter/Batch abstractions **as a proposed,
+  separate adapter layer** — it does not modify `nexus_neuromirror` and keeps
+  NeuralSet/PyTorch out of the web backend's request path.
+
+Both reports preserve their inline citations and Sources/References sections.
+
+### Experiment scaffold (`experiments/neuralset-experiment/`)
+
+A standalone, executable first-experiment scaffold
+([`experiments/neuralset-experiment/`](experiments/neuralset-experiment/README.md))
+that runs a complete, conservative baseline on tidy CSV/TSV EEG: validate →
+normalize markers → conservative preprocess (artifacts flagged, never silently
+deleted) → event-aligned windowing → Welch bandpower features → a baseline
+classifier with **session-aware cross-validation** (leave-one-session-out /
+GroupKFold, so windows never leak across train/test) → `metrics.json` + plots. A
+`demo` command generates synthetic data so the whole pipeline runs with no
+private files. Committed synthetic reference outputs live in
+[`experiments/neuralset-experiment/outputs/demo/`](experiments/neuralset-experiment/outputs/demo/README.md)
+(the large raw demo CSV is regenerated, not committed).
+
+```bash
+cd experiments/neuralset-experiment
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+neuralset-scaffold demo --out outputs/demo   # end-to-end, synthetic
+pytest && ruff check src tests               # 54 tests, lint
+```
+
+### How these fit together (experiment ↔ web UI ↔ NeuralSet adapter boundary)
+
+The pieces are deliberately layered so each can evolve without breaking the
+others:
+
+- **Web UI / CLI verifier (shipped, runtime).** The FastAPI/React dashboard and
+  the `nexus-neuromirror verify` CLI are the production path: they ingest a
+  BioTrace+ EDF/EDF+ export and emit *diagnostics only* — channel/sample-rate
+  validation, RMS/peak-to-peak, marker detection, and reproducible JSON+figure
+  reports. They make **no** modeling, medical, or mental-state claims and never
+  import the experiment or NeuralSet.
+- **Experiment scaffold (research, offline).** Picks up *downstream* of that
+  verified boundary. It is where windowing, feature extraction, and baseline
+  modeling actually live — the parts the main pipeline configures
+  (`model.window_s`, bands) but intentionally does not implement. It runs
+  **out-of-band** on exported/synthetic data, is installed as its own package
+  with its own venv, and never touches the web request path.
+- **NeuralSet adapter boundary (optional seam).** Both the spec and the
+  scaffold expose NeuralSet as an *optional, gracefully-degrading* seam, never a
+  requirement. In the scaffold,
+  [`neuralset_adapter.py`](experiments/neuralset-experiment/src/neuralset_scaffold/neuralset_adapter.py)
+  is an explicit wiring point: if the `neuralset` package is importable it can
+  provide features, otherwise the scaffold falls back to its built-in spectral
+  features and reports `available=false`. No NeuralSet API is fabricated. This
+  keeps the heavy Neuro-AI dependency isolated to the experiment layer and out
+  of the verifier and the web backend — exactly the boundary the integration
+  spec prescribes.
+
+In short: **the web UI verifies and reports; the experiment models; the
+NeuralSet adapter is an optional research seam** — and the two never share a
+dependency graph.
+
 ## Success criteria (prototype)
 
 1. A 60-second bring-up recording exports to EDF/EDF+ with all four channels.
@@ -216,9 +295,12 @@ Tests: `cd web/backend && python -m pytest` (backend);
 ```
 configs/     montage.yaml, project.example.yaml
 docs/        setup-checklist.md, architecture.md
+docs/research/  research thesis + NeuralSet integration spec (documentation)
+experiments/ neuralset-experiment/ — standalone executable baseline scaffold
 src/         nexus_neuromirror/ (config, edf, metrics, markers, verify, viz, report, cli)
 tests/       synthetic-EDF based tests (no private data required)
 web/         FastAPI backend + React/Vite dashboard — see web/README.md
+             web/vercel/ — GitHub-backed serverless deployment
 data/        (git-ignored) recordings — see data/README.md
 reports/     (git-ignored) generated diagnostics — see reports/README.md
              (exception: synthetic reports/diagnostic_demo/ is committed)
@@ -234,6 +316,12 @@ reports/     (git-ignored) generated diagnostics — see reports/README.md
   real-time SDK extension path.
 - [`data/README.md`](data/README.md) and [`reports/README.md`](reports/README.md)
   — why neural data and generated reports must not be committed.
+- [`docs/research/neuromirror-research-thesis.md`](docs/research/neuromirror-research-thesis.md)
+  and [`docs/research/neuralset-integration-spec.md`](docs/research/neuralset-integration-spec.md)
+  — the research thesis and the NeuralSet integration spec (see **Research &
+  experiments** above).
+- [`experiments/neuralset-experiment/README.md`](experiments/neuralset-experiment/README.md)
+  — the standalone baseline experiment scaffold.
 
 ## External resources & datasets
 

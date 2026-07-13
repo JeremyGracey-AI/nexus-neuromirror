@@ -201,4 +201,47 @@ flowchart LR
 **Deployment note.** For the hosted preview, keep uploads under the proxy's
 10 MB request limit (the app caps at 8 MB). GitHub credentials must be injected
 into the server environment at runtime; if they are unavailable, sync degrades
-gracefully to local-only without data loss.
+gracefully to local-only without data loss. A production, GitHub-backed
+serverless variant of the dashboard lives under `web/vercel/` (see
+`web/vercel/DEPLOYMENT.md`); it preserves the same analysis contracts and
+diagnostics-only posture.
+
+## Research & experiment layer (`docs/research/`, `experiments/`)
+
+Beyond the shipped runtime, the repository carries a research/experiment layer
+that sits **downstream of, and isolated from, the verifier and web dashboard**.
+It exists so modeling work can be specified and prototyped without touching the
+production analysis path or its dependency graph.
+
+```mermaid
+flowchart LR
+    EDF["BioTrace+ EDF/EDF+"] --> V["verify / report (runtime)<br/>diagnostics only"]
+    V --> RPT[("diagnostic.json + figures")]
+    RPT -.->|exported / offline| EXP["experiments/neuralset-experiment<br/>windowing · features · baseline model"]
+    EXP -.->|optional, degrades gracefully| NS["NeuralSet adapter seam"]
+    subgraph docs ["docs/research/ (specification)"]
+      TH["research thesis"]
+      SP["NeuralSet integration spec"]
+    end
+    SP -.->|prescribes boundary| EXP
+```
+
+- **`docs/research/`** holds two standalone documents: a research thesis (the
+  falsifiable science program) and a NeuralSet integration spec (an
+  implementation-ready, *proposed* adapter mapping BioTrace+ sessions onto
+  NeuralSet primitives). Neither modifies `nexus_neuromirror`.
+- **`experiments/neuralset-experiment/`** is a standalone, separately-packaged
+  executable scaffold (its own `pyproject.toml`, venv, tests). It implements the
+  windowing/feature/baseline-model steps the runtime config *anticipates*
+  (`model.window_s`, bands) but intentionally leaves unimplemented. It runs
+  offline on exported or synthetic data and is **never imported by the CLI or the
+  web backend**.
+- **NeuralSet adapter boundary.** Both the spec and the scaffold treat NeuralSet
+  (and PyTorch) as an *optional* seam that degrades gracefully when absent
+  (`neuralset_adapter.is_available()` → built-in spectral fallback). This keeps
+  the heavy Neuro-AI dependency confined to the experiment layer, upholding the
+  "reuse, don't fork" and boundary-security principles above.
+
+In one line: **the runtime verifies and reports; the experiment models offline;
+the NeuralSet adapter is an optional research seam** — and the runtime never
+depends on either.
