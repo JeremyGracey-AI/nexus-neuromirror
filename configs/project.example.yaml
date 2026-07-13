@@ -1,0 +1,82 @@
+# Example project configuration for the NeXus-10 + BioTrace+ prototype.
+#
+# Copy to `configs/project.yaml` and adapt to your acquisition setup.
+# The `nexus-neuromirror verify` CLI reads this file to validate a recording.
+
+project:
+  name: "nexus-neuromirror"
+  subject_scheme: "anon-###"      # e.g. anon-001; never store PII in filenames
+
+# Expected acquisition characteristics. BioTrace+ / NeXus-10 EEG channels are
+# commonly acquired at 256 Hz; list every rate you consider valid.
+acquisition:
+  expected_sample_rates_hz: [256, 512, 1024]
+  # Hard failure if the file's rate is not in the allowed set below AND cannot
+  # be resampled. Leave empty to accept any rate.
+  allowed_sample_rates_hz: [128, 256, 512, 1024, 2048]
+  # Unit assumption for EEG traces after MNE import. MNE stores EEG in volts;
+  # EDF headers usually declare microvolts. We report the assumption explicitly.
+  eeg_unit_assumption: "volts (MNE-internal); EDF physical dimension expected uV"
+
+# Common analysis sample rate. All modeling happens after resampling to this
+# rate so features are comparable across sessions and hardware revisions.
+resample:
+  target_hz: 200
+  method: "fir"                   # passed through to MNE resample where relevant
+
+# The four expected EEG channels and accepted aliases. Matching is
+# case-insensitive and ignores separators (spaces, dashes, dots).
+# BioTrace+ exports frequently prefix or suffix labels (e.g. "EEG Fz-A1A2").
+channels:
+  expected:
+    - canonical: "Fz"
+      aliases: ["Fz", "EEG Fz", "Fz-A1A2", "Fz-LE", "Ch1", "A-Fz"]
+    - canonical: "FCz"
+      aliases: ["FCz", "EEG FCz", "FCz-A1A2", "Cz'", "Ch2", "B-FCz"]
+    - canonical: "Pz"
+      aliases: ["Pz", "EEG Pz", "Pz-A1A2", "Pz-LE", "Ch3", "C-Pz"]
+    - canonical: "Oz"
+      aliases: ["Oz", "EEG Oz", "Oz-A1A2", "Oz-LE", "Ch4", "D-Oz"]
+  # Non-EEG channels that may appear and should not be validated as EEG.
+  ignore_patterns: ["ECG", "EMG", "EOG", "HR", "BVP", "GSR", "Resp", "Temp", "Accel", "Status"]
+
+# Marker / event handling. BioTrace+ can export events as EDF+ annotations or
+# as a dedicated status/marker channel. Detection tries both.
+markers:
+  annotation_aliases: ["marker", "trigger", "stim", "event", "cue", "block"]
+  channel_aliases: ["Status", "Marker", "Trigger", "STI 014", "Events"]
+  # Minimum distinct event codes expected for a valid task recording.
+  # Set to 0 for pure resting-state diagnostics.
+  min_expected_events: 0
+
+# Validation thresholds for the diagnostic gate. Values are generous defaults
+# suitable for a 60-second bring-up recording, not clinical acceptance limits.
+validation:
+  min_duration_s: 30.0
+  # Per-channel signal quality (in microvolts, after unit normalization).
+  rms_uv_min: 0.5                 # below this looks like a dead / disconnected lead
+  rms_uv_max: 150.0               # above this looks like noise / motion / poor contact
+  ptp_uv_max: 3000.0             # peak-to-peak ceiling before flagging artifacts
+  require_all_expected_channels: true
+
+# Filesystem layout (relative to the repo root unless absolute).
+paths:
+  data_dir: "data"
+  reports_dir: "reports"
+
+# Model options — consumed by later phases, recorded here for provenance.
+# No public real-time NeXus-10 SDK is assumed; adaptation is blockwise/offline.
+model:
+  window_s: 2.0
+  window_overlap: 0.5
+  bandpass_hz: [1.0, 40.0]
+  notch_hz: [50.0]                # set to 60.0 for regions on 60 Hz mains
+  features: ["bandpower", "relative_bandpower"]
+  bands:
+    delta: [1.0, 4.0]
+    theta: [4.0, 8.0]
+    alpha: [8.0, 13.0]
+    beta:  [13.0, 30.0]
+    gamma: [30.0, 40.0]
+  backend: "baseline-linear"      # placeholder classifier for the offline loop
+  adaptation: "blockwise"         # retrain/recalibrate between blocks, not real-time

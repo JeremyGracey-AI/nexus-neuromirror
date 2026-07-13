@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Neural data — NEVER commit recordings (see data/README.md)
+data/**
+!data/README.md
+*.edf
+*.EDF
+*.bdf
+*.gdf
+*.fif
+*.set
+*.fdt
+*.vhdr
+*.vmrk
+*.eeg
+
+# Generated reports and diagnostic artifacts (see reports/README.md)
+reports/**
+!reports/README.md
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp

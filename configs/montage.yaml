@@ -1,0 +1,49 @@
+# Four-channel EEG montage for the NeXus-10 + BioTrace+ prototype.
+#
+# This montage is intentionally minimal: a midline chain from frontal to
+# occipital that samples the dominant sensorimotor / attention / alpha
+# generators while keeping setup time and impedance-management effort low.
+#
+# Reference and ground follow the manufacturer's approved configuration.
+# ALWAYS defer to the Mind Media NeXus-10 / BioTrace+ manual for the exact,
+# device-approved ground placement for your hardware revision.
+
+montage:
+  name: "midline-4ch-v1"
+  system: "10-20"
+  description: "Midline frontal-to-occipital 4-channel chain."
+
+  # Active EEG electrodes (10-20 nomenclature).
+  channels:
+    - label: "Fz"
+      role: "eeg"
+      rationale: "Midline frontal — attention, theta, executive control."
+    - label: "FCz"
+      role: "eeg"
+      rationale: "Fronto-central midline — sensorimotor / error-related activity."
+    - label: "Pz"
+      role: "eeg"
+      rationale: "Midline parietal — P300, alpha, attention allocation."
+    - label: "Oz"
+      role: "eeg"
+      rationale: "Midline occipital — visual alpha, eyes-open/closed contrast."
+
+  # Reference: linked ears / mastoids (A1+A2 or M1+M2), physically linked or
+  # linked in software. Keep it consistent across all sessions.
+  reference:
+    type: "linked-ear-mastoid"
+    sites: ["A1", "A2"]      # equivalently M1, M2
+    note: "Use the same linked reference for every session to keep features comparable."
+
+  # Ground / bias — MANUFACTURER-APPROVED PLACEMENT ONLY.
+  ground:
+    type: "manufacturer-approved"
+    site: "per-manual"
+    note: >
+      Do not improvise ground placement. Follow the exact site specified in the
+      Mind Media NeXus-10 / BioTrace+ documentation for your hardware revision.
+
+  # Impedance target for a comfortable, clean 4-channel setup.
+  impedance:
+    target_kohm_max: 10
+    preferred_kohm_max: 5
