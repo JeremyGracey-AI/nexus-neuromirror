@@ -4,6 +4,9 @@
   "version": "0.2.0",
   "type": "module",
   "description": "GitHub-backed Vercel deployment of the NeXus NeuroMirror EEG QC prototype dashboard.",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build": "npm --prefix frontend install && npm --prefix frontend run build",
     "dev": "vercel dev",
