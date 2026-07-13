@@ -163,5 +163,28 @@
   ],
   "warnings": [],
   "hard_failures": [],
-  "git": null
+  "git": {
+    "enabled": true,
+    "committed": true,
+    "pushed": true,
+    "commit_sha": "55178411e6d67336fb1624334d4f9f2e60af7496",
+    "commit_url": "https://github.com/JeremyGracey-AI/nexus-neuromirror/commit/55178411e6d67336fb1624334d4f9f2e60af7496",
+    "branch": "master",
+    "message": "data: add session 588c748a0432 (EDF/EDF+, ok) \u2014 pushed to GitHub via authorized foreground GitHub CLI (reconciled: the long-lived preview process could not inherit the foreground credential, so the in-process push failed and was completed manually)",
+    "error": null,
+    "steps": [
+      "git add --force data/uploads/2026-07-13/588c748a0432/nnm_demo.edf (rc=0)",
+      "git add --force data/uploads/2026-07-13/588c748a0432/metadata.json (rc=0)",
+      "git add --force reports/uploads/588c748a0432/trace.png (rc=0)",
+      "git add --force reports/uploads/588c748a0432/trace.svg (rc=0)",
+      "git add --force reports/uploads/588c748a0432/psd.png (rc=0)",
+      "git add --force reports/uploads/588c748a0432/psd.svg (rc=0)",
+      "git add --force reports/uploads/588c748a0432/markers.png (rc=0)",
+      "git add --force reports/uploads/588c748a0432/markers.svg (rc=0)",
+      "git add --force reports/uploads/588c748a0432/diagnostic.json (rc=0)",
+      "git commit (rc=0)",
+      "git push (rc=128, in-process; preview process lacked GitHub credential)",
+      "git push (rc=0, foreground GitHub CLI \u2014 manual reconciliation)"
+    ]
+  }
 }

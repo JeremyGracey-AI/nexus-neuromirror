@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Logo } from './components/Logo';
-import { useHashRoute, useTheme } from './hooks';
+import { api } from './api';
+import { useAsync, useHashRoute, useTheme } from './hooks';
 import { cx } from './lib';
+import type { RepoSyncStatus } from './types';
 import { Overview } from './pages/Overview';
 import { UploadPage } from './pages/Upload';
 import { Sessions } from './pages/Sessions';
@@ -46,6 +48,24 @@ function NavItem({
 }
 
 function PrivacyBanner() {
+  // Only promise a GitHub push when the server can actually reach the remote
+  // with credentials. Otherwise state the honest local-only behavior.
+  const { data: sync } = useAsync<RepoSyncStatus>(() => api.repoSync());
+  const canPush = !!sync && sync.enabled && sync.credentials_available;
+
+  let syncSentence: string;
+  if (!sync) {
+    // Status not yet loaded — describe only what is always true.
+    syncSentence = 'Uploads are stored in this repository and committed locally.';
+  } else if (canPush) {
+    syncSentence =
+      'Uploads are stored in this repository, committed, and pushed to the private GitHub repo.';
+  } else {
+    syncSentence =
+      'Uploads are stored in this repository and committed locally; they are pushed to ' +
+      'GitHub only when server-side GitHub credentials are configured.';
+  }
+
   return (
     <div
       role="note"
@@ -55,8 +75,8 @@ function PrivacyBanner() {
       <span aria-hidden className="mt-0.5 text-warning">▲</span>
       <p>
         <span className="font-semibold">Private prototype.</span> EEG/neurofeedback data is
-        sensitive. Uploads are stored in this repository and committed to a private GitHub repo.
-        Sharing this site grants upload access. Not a medical or diagnostic tool.
+        sensitive. {syncSentence} Sharing this site grants upload access. Not a medical or
+        diagnostic tool.
       </p>
     </div>
   );

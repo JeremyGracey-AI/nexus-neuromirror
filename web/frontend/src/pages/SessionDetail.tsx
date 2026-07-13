@@ -206,6 +206,13 @@ function GitBlock({ git }: { git: SessionMeta['git'] }) {
       <div className="flex items-center gap-3">
         <StatusPill kind={git.committed ? 'warning' : 'failed'} label={git.committed ? 'Committed · push failed' : 'Not committed'} />
       </div>
+      {git.committed && (
+        <p className="mt-2 text-sm text-text-muted">
+          The commit is saved locally{git.commit_sha ? ` (${git.commit_sha.slice(0, 10)})` : ''}. A
+          push to GitHub requires server-side GitHub credentials; it can be completed later without
+          re-uploading.
+        </p>
+      )}
       {git.error && (
         <p className="mt-2 flex items-start gap-2 text-sm text-text-muted" role="alert">
           <span aria-hidden className="text-warning">▲</span>

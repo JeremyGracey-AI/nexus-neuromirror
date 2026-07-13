@@ -59,10 +59,27 @@ statically at `/`, so a production build runs as a single process.
 `validate → sanitize filename → reject traversal → enforce extension + 8 MB
 size limit → write under data/uploads/YYYY-MM-DD/<session-id>/ → SHA-256 →
 metadata.json → (EDF only) run verifier → write report under
-reports/uploads/<session-id>/ → (if enabled) git add-force + commit + push →
+reports/uploads/<session-id>/ → (if enabled) git add-force + commit (local) →
+push (only if server-side credentials are configured) →
 return metadata incl. git status/commit URL.`
 
-Push failures never lose the local upload; the error is returned for display.
+Local save, analysis, and the **local commit** always complete when git sync is
+enabled. The **push is best-effort**: it succeeds only when the server can reach
+the remote with credentials. Push failures never lose the local upload or commit
+— the failure is captured in `metadata.json` (`pushed=false`, `error=…`) and
+surfaced in the UI, and can be reconciled later with an authorized `git push`.
+
+> **Preview-process caveat.** A long-lived preview server process does not
+> inherit the foreground GitHub CLI credential, so in-process pushes from a
+> hosted preview usually fail while the local commit still succeeds. Complete the
+> push with the authorized foreground GitHub CLI, then reconcile the session's
+> `metadata.json` `git` block (`pushed=true`, `commit_url`, `error=null`) so the
+> catalog and Session-detail views reflect reality.
+
+The UI copy is credential-aware: the privacy banner and Upload page only promise
+a GitHub push when `/api/repo-sync` reports `credentials_available`; otherwise
+they state that uploads are saved, analyzed, and committed **locally**, and
+pushed to GitHub only when server-side credentials are configured.
 
 ### Environment variables
 

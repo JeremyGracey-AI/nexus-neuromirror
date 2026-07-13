@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { api } from '../api';
 import { useAsync, navigate } from '../hooks';
-import type { HealthStatus, SessionMeta } from '../types';
+import type { HealthStatus, RepoSyncStatus, SessionMeta } from '../types';
 import { Button, Card, FormatBadge, SectionTitle, Skeleton, StatusPill } from '../components/ui';
 import { cx, formatBytes } from '../lib';
 
@@ -14,6 +14,8 @@ function extOf(name: string): string {
 
 export function UploadPage() {
   const { data: health, loading } = useAsync<HealthStatus>(() => api.health());
+  const { data: sync } = useAsync<RepoSyncStatus>(() => api.repoSync());
+  const canPush = !!sync && sync.enabled && sync.credentials_available;
   const [phase, setPhase] = useState<Phase>('idle');
   const [progress, setProgress] = useState(0);
   const [dragActive, setDragActive] = useState(false);
@@ -105,8 +107,10 @@ export function UploadPage() {
         <h2 className="text-xl font-semibold tracking-tight">Upload a BioTrace export</h2>
         <p className="mt-1 max-w-2xl text-sm text-text-muted">
           Drag a recording here or browse. EDF/EDF+ is analyzed with the MNE pipeline; other
-          accepted formats are cataloged. Files are checksummed, stored, and committed to the
-          private repository.
+          accepted formats are cataloged. Files are checksummed, stored, and committed locally
+          {canPush
+            ? ', then pushed to the private GitHub repo.'
+            : '. They are pushed to GitHub only when server-side GitHub credentials are configured.'}
         </p>
       </div>
 

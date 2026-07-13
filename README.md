@@ -133,10 +133,13 @@ by the authenticated preview/hosting boundary you run it behind.
 
 ### Privacy & security model
 
-- EEG/neurofeedback data is sensitive. Uploads are stored **in this repository**
-  and, when git sync is enabled, committed and pushed to the **private** GitHub
-  remote. Sharing the running site grants upload access — keep it behind an
-  authenticated boundary.
+- EEG/neurofeedback data is sensitive. Uploads are stored **in this repository**,
+  analyzed (EDF/EDF+), and committed **locally**. They are pushed to the
+  **private** GitHub remote **only when server-side GitHub credentials are
+  configured** and the remote is reachable; otherwise the local save, analysis,
+  and local commit still complete and the push is reported as pending/failed
+  without data loss. Sharing the running site grants upload access — keep it
+  behind an authenticated boundary.
 - Every upload is **sanitized** (path-traversal rejected, filename normalized),
   **extension-restricted**, **size-limited**, and **SHA-256 checksummed**. Raw
   file contents are **never logged**.
@@ -156,11 +159,21 @@ directly.
 ### GitHub sync & runtime credentials
 
 Repo sync uses server-side `git`/`gh` only — **GitHub credentials are never
-exposed to the frontend**. If credentials are missing or a push fails, the
-upload is still saved and cataloged locally and the failure is surfaced in the
-UI without data loss. When running behind a hosted preview, git credentials must
-be injected into the **server** environment at runtime; they may not persist
-across a hosted session, in which case sync degrades gracefully to local-only.
+exposed to the frontend**. **Automatic push is not guaranteed:** the UI only
+promises a push when the `/api/repo-sync` credential check succeeds. If
+credentials are missing or a push fails, the upload is still saved, analyzed, and
+committed locally, and the pending/failed push is surfaced in the UI without data
+loss — it can be completed later with an authorized `git push` (no re-upload
+needed).
+
+A known constraint: a **long-lived preview server process does not inherit the
+foreground GitHub CLI credential**, so in-process pushes from a hosted preview
+typically fail even though the local commit succeeds. When that happens, complete
+the push with the authorized foreground GitHub CLI and, if desired, reconcile the
+session's `metadata.json` `git` block (`pushed`, `commit_url`, `error`) to match.
+When running behind a hosted preview, inject git credentials into the **server**
+environment at runtime for automatic push; they may not persist across a hosted
+session, in which case sync degrades gracefully to local-only.
 
 ### Run it locally
 
