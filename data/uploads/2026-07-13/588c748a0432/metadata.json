@@ -1,0 +1,167 @@
+{
+  "session_id": "588c748a0432",
+  "date": "2026-07-13",
+  "original_filename": "nnm_demo.edf",
+  "extension": ".edf",
+  "format_label": "EDF/EDF+",
+  "analysis_mode": "analyze",
+  "size_bytes": 156952,
+  "sha256": "7dd950fcd10cf526fc6d11c9971da83f6dd1c818c04f63471360d7c2c0b5b140",
+  "uploaded_at": "2026-07-13T20:27:10.347744+00:00",
+  "raw_relpath": "data/uploads/2026-07-13/588c748a0432/nnm_demo.edf",
+  "analysis_status": "ok",
+  "analysis": {
+    "status": "ok",
+    "config_name": "nexus-neuromirror",
+    "unit_assumption": "volts (MNE-internal); EDF physical dimension expected uV",
+    "recording": {
+      "n_channels": 5,
+      "channel_names": [
+        "EEG Fz-A1A2",
+        "EEG FCz-A1A2",
+        "EEG Pz-A1A2",
+        "EEG Oz-A1A2",
+        "Status"
+      ],
+      "sfreq_hz": 256.0,
+      "duration_s": 60.0,
+      "n_samples": 15360,
+      "n_annotations": 6,
+      "highpass_hz": 0.0,
+      "lowpass_hz": 128.0,
+      "meas_date": "1985-01-01T00:00:00+00:00"
+    },
+    "expected_channels": [
+      {
+        "canonical": "Fz",
+        "matched_name": "EEG Fz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 8.8169,
+          "ptp_uv": 62.5632,
+          "max_abs_uv": 33.1234,
+          "mean_uv": -0.1411
+        }
+      },
+      {
+        "canonical": "FCz",
+        "matched_name": "EEG FCz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 8.8903,
+          "ptp_uv": 64.812,
+          "max_abs_uv": 32.7731,
+          "mean_uv": -0.027
+        }
+      },
+      {
+        "canonical": "Pz",
+        "matched_name": "EEG Pz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 8.7069,
+          "ptp_uv": 60.4832,
+          "max_abs_uv": 31.0357,
+          "mean_uv": -0.3118
+        }
+      },
+      {
+        "canonical": "Oz",
+        "matched_name": "EEG Oz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 13.0605,
+          "ptp_uv": 83.7815,
+          "max_abs_uv": 42.0316,
+          "mean_uv": 0.1541
+        }
+      }
+    ],
+    "markers": {
+      "n_events": 12,
+      "distinct_labels": [
+        "code:1",
+        "code:2",
+        "cue/block-A",
+        "cue/block-B"
+      ],
+      "candidate_marker_channels": [
+        "Status"
+      ],
+      "events": [
+        {
+          "onset_s": 5.0,
+          "label": "cue/block-A",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 5.0,
+          "label": "code:1",
+          "source": "Status"
+        },
+        {
+          "onset_s": 15.0,
+          "label": "cue/block-B",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 15.0,
+          "label": "code:2",
+          "source": "Status"
+        },
+        {
+          "onset_s": 25.0,
+          "label": "cue/block-A",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 25.0,
+          "label": "code:1",
+          "source": "Status"
+        },
+        {
+          "onset_s": 35.0,
+          "label": "cue/block-B",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 35.0,
+          "label": "code:2",
+          "source": "Status"
+        },
+        {
+          "onset_s": 45.0,
+          "label": "cue/block-A",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 45.0,
+          "label": "code:1",
+          "source": "Status"
+        },
+        {
+          "onset_s": 55.0,
+          "label": "cue/block-B",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 55.0,
+          "label": "code:2",
+          "source": "Status"
+        }
+      ]
+    }
+  },
+  "report_relpaths": [
+    "reports/uploads/588c748a0432/trace.png",
+    "reports/uploads/588c748a0432/trace.svg",
+    "reports/uploads/588c748a0432/psd.png",
+    "reports/uploads/588c748a0432/psd.svg",
+    "reports/uploads/588c748a0432/markers.png",
+    "reports/uploads/588c748a0432/markers.svg",
+    "reports/uploads/588c748a0432/diagnostic.json"
+  ],
+  "warnings": [],
+  "hard_failures": [],
+  "git": null
+}
