@@ -1,0 +1,161 @@
+{
+  "session_id": "c51e0bc776cc",
+  "date": "2026-07-13",
+  "original_filename": "nnm_prod_test.edf",
+  "extension": ".edf",
+  "format_label": "EDF/EDF+",
+  "analysis_mode": "analyze",
+  "size_bytes": 156952,
+  "sha256": "7dd950fcd10cf526fc6d11c9971da83f6dd1c818c04f63471360d7c2c0b5b140",
+  "uploaded_at": "2026-07-13T22:40:56.836Z",
+  "raw_relpath": "data/uploads/2026-07-13/c51e0bc776cc/nnm_prod_test.edf",
+  "analysis_status": "ok",
+  "analysis": {
+    "status": "ok",
+    "config_name": "nexus-neuromirror",
+    "unit_assumption": "volts (MNE-internal); EDF physical dimension expected uV",
+    "recording": {
+      "n_channels": 5,
+      "channel_names": [
+        "EEG Fz-A1A2",
+        "EEG FCz-A1A2",
+        "EEG Pz-A1A2",
+        "EEG Oz-A1A2",
+        "Status"
+      ],
+      "sfreq_hz": 256,
+      "duration_s": 60,
+      "n_samples": 15360,
+      "n_annotations": 6,
+      "highpass_hz": null,
+      "lowpass_hz": null,
+      "meas_date": "1985-01-01T00:00:00+00:00"
+    },
+    "expected_channels": [
+      {
+        "canonical": "Fz",
+        "matched_name": "EEG Fz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 8.8169,
+          "ptp_uv": 62.5632,
+          "max_abs_uv": 33.1234,
+          "mean_uv": -0.1411
+        }
+      },
+      {
+        "canonical": "FCz",
+        "matched_name": "EEG FCz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 8.8903,
+          "ptp_uv": 64.812,
+          "max_abs_uv": 32.7731,
+          "mean_uv": -0.027
+        }
+      },
+      {
+        "canonical": "Pz",
+        "matched_name": "EEG Pz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 8.7069,
+          "ptp_uv": 60.4832,
+          "max_abs_uv": 31.0357,
+          "mean_uv": -0.3118
+        }
+      },
+      {
+        "canonical": "Oz",
+        "matched_name": "EEG Oz-A1A2",
+        "found": true,
+        "metrics": {
+          "rms_uv": 13.0605,
+          "ptp_uv": 83.7816,
+          "max_abs_uv": 42.0316,
+          "mean_uv": 0.1541
+        }
+      }
+    ],
+    "markers": {
+      "n_events": 12,
+      "distinct_labels": [
+        "code:1",
+        "code:2",
+        "cue/block-A",
+        "cue/block-B"
+      ],
+      "candidate_marker_channels": [
+        "Status"
+      ],
+      "events": [
+        {
+          "onset_s": 5,
+          "label": "cue/block-A",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 5,
+          "label": "code:1",
+          "source": "Status"
+        },
+        {
+          "onset_s": 15,
+          "label": "cue/block-B",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 15,
+          "label": "code:2",
+          "source": "Status"
+        },
+        {
+          "onset_s": 25,
+          "label": "cue/block-A",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 25,
+          "label": "code:1",
+          "source": "Status"
+        },
+        {
+          "onset_s": 35,
+          "label": "cue/block-B",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 35,
+          "label": "code:2",
+          "source": "Status"
+        },
+        {
+          "onset_s": 45,
+          "label": "cue/block-A",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 45,
+          "label": "code:1",
+          "source": "Status"
+        },
+        {
+          "onset_s": 55,
+          "label": "cue/block-B",
+          "source": "annotation"
+        },
+        {
+          "onset_s": 55,
+          "label": "code:2",
+          "source": "Status"
+        }
+      ]
+    }
+  },
+  "report_relpaths": [
+    "reports/uploads/c51e0bc776cc/diagnostic.json"
+  ],
+  "warnings": [],
+  "hard_failures": [],
+  "git": null
+}
