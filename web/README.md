@@ -94,6 +94,33 @@ tabular numerals, fixed dashboard shell with a single scroll region, hash
 routing, 44px min touch targets, and status indicators that never rely on color
 alone (each pill carries a glyph and text label).
 
+### Deployment packaging
+
+The build is packaged to work in three contexts without change:
+
+1. **Vite dev server** — `/api/*` is proxied to `http://127.0.0.1:8000`.
+2. **Backend-served build** — FastAPI serves `dist/` at `/`; `/api/*` hits the
+   same origin.
+3. **Nested preview deploy** — served under a nested private URL such as
+   `/computer/a/<id>/`.
+
+Two settings make (3) work:
+
+- **`base: './'` in `vite.config.ts`** emits **relative** asset references
+  (`./assets/index-*.js`) instead of root-absolute (`/assets/...`). Root-absolute
+  paths resolve against the wrong origin root under a nested URL and 404, which
+  produces a blank page.
+- **`__PORT_8000__` placeholder in `src/api.ts`.** `deploy_website` replaces it
+  with the proxy path `port/8000` at deploy time. The API base is computed as
+  `PORT_PREFIX ? \`${PORT_PREFIX}/api\` : '/api'` — so unreplaced (local) it is
+  `/api` (same-origin), and deployed it is the **relative** `port/8000/api`,
+  which resolves under the nested URL. The placeholder must survive the build
+  intact (it does — it is a plain string literal), so re-run `npm run build`
+  before every deploy.
+
+Deploy directory: **`web/frontend/dist`**. Start the backend on port 8000 so the
+`port/8000` proxy has a target.
+
 ## Testing
 
 ```bash

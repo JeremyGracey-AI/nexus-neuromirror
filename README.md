@@ -174,7 +174,12 @@ cd web/frontend && npm install && npm run dev   # dev server proxies /api -> :80
 ```
 
 For a single-process deployment, build the frontend (`npm run build`) — the
-backend serves `web/frontend/dist/` at `/` automatically when present.
+backend serves `web/frontend/dist/` at `/` automatically when present. The build
+is packaged for nested-URL previews too: `vite.config.ts` uses `base: './'` for
+relative asset paths, and `src/api.ts` uses the `__PORT_8000__` proxy placeholder
+for its API base. Deploy the `web/frontend/dist` directory and keep the backend
+running on port 8000. See [`web/README.md`](web/README.md) → Deployment
+packaging.
 
 Useful environment variables: `NNM_GIT_SYNC_ENABLED` (default on),
 `NNM_GIT_REMOTE`, `NNM_GIT_BRANCH`, `NNM_MAX_UPLOAD_BYTES`, `NNM_UPLOADS_SUBDIR`,

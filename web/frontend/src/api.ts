@@ -5,9 +5,24 @@ import type {
   SessionMeta,
 } from './types';
 
-// Deployment note: the app is served by the FastAPI backend, so a relative
-// base works both locally and behind the deploy proxy.
-const BASE = '/api';
+// Deployment note.
+//
+// `deploy_website` replaces the `__PORT_8000__` placeholder with the proxy path
+// (`port/8000`) at deploy time. Two runtime modes:
+//
+//   - Local / backend-served: the placeholder is left unreplaced (it still
+//     starts with `__`), so `PORT_PREFIX` is empty and requests hit `/api/...`
+//     on the same origin. This works with the Vite dev proxy AND when the
+//     FastAPI backend serves the built files directly at `/`.
+//   - Deployed behind the preview proxy: `PORT_PREFIX` becomes the *relative*
+//     path `port/8000`, so requests hit `port/8000/api/...`, resolved against
+//     the nested preview URL (paired with `base: './'` in vite.config.ts).
+//
+// Using a leading slash for the local case keeps root-relative behavior for the
+// backend-served build; the deployed case is intentionally relative so it
+// resolves under the nested URL.
+const PORT_PREFIX = '__PORT_8000__'.startsWith('__') ? '' : '__PORT_8000__';
+const BASE = PORT_PREFIX ? `${PORT_PREFIX}/api` : '/api';
 
 async function getJSON<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`);
