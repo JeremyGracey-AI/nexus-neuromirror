@@ -101,6 +101,89 @@ The verifier:
 - **exits nonzero** on a hard validation failure (missing channel, too short,
   disallowed sample rate, missing required events).
 
+## Web dashboard (`web/`)
+
+A local, single-user **web dashboard** wraps the same verifier so you can upload
+BioTrace+ exports through a browser, view diagnostics, and (optionally) commit
+raw recordings plus generated reports to this private repository. It is a
+**private prototype** — there are no user accounts; access is controlled entirely
+by the authenticated preview/hosting boundary you run it behind.
+
+> **Not a medical or diagnostic tool.** The dashboard surfaces the same research
+> diagnostics as the CLI and makes no clinical claims.
+
+### Architecture
+
+- **Backend** — FastAPI (`web/backend/nnm_web/`) that reuses the
+  `nexus_neuromirror` package for EDF analysis. Endpoints: health/status,
+  session catalog, session detail, secure multipart upload, artifact serving,
+  and repo-sync status.
+- **Frontend** — React + Vite + TypeScript + Tailwind (`web/frontend/`),
+  hash-routed, with Overview, Upload, Sessions, and Session-detail pages,
+  light/dark themes, and full skeleton/empty/error/unsupported-format states.
+
+### Accepted upload formats
+
+| Format | Extensions | Handling |
+|--------|-----------|----------|
+| EDF / EDF+ | `.edf` | **Analyzed** with the MNE verifier → report + figures |
+| ASCII / CSV | `.csv`, `.txt`, `.asc` | Cataloged only (checksum + metadata) in the MVP |
+| MATLAB | `.mat` | Cataloged only (checksum + metadata) in the MVP |
+| BCD | `.bcd` | **Archival only — never parsed** |
+
+### Privacy & security model
+
+- EEG/neurofeedback data is sensitive. Uploads are stored **in this repository**
+  and, when git sync is enabled, committed and pushed to the **private** GitHub
+  remote. Sharing the running site grants upload access — keep it behind an
+  authenticated boundary.
+- Every upload is **sanitized** (path-traversal rejected, filename normalized),
+  **extension-restricted**, **size-limited**, and **SHA-256 checksummed**. Raw
+  file contents are **never logged**.
+- The `.gitignore` keeps all real recordings and generated reports out of the
+  repo. Accepted uploads are added only through an explicit, **per-file safe
+  force-add** in the upload path — the data directories are never broadly
+  un-ignored. The only intentionally committed report is the **synthetic** demo
+  under `reports/diagnostic_demo/`, which powers the Overview page.
+
+### 8 MB upload limit
+
+The hosted preview proxy rejects requests over 10 MB, so the dashboard caps
+uploads at **8 MB** (`NNM_MAX_UPLOAD_BYTES`). A 60-second four-channel synthetic
+EDF is ~150 KB, well within range. For larger real recordings, use the CLI
+directly.
+
+### GitHub sync & runtime credentials
+
+Repo sync uses server-side `git`/`gh` only — **GitHub credentials are never
+exposed to the frontend**. If credentials are missing or a push fails, the
+upload is still saved and cataloged locally and the failure is surfaced in the
+UI without data loss. When running behind a hosted preview, git credentials must
+be injected into the **server** environment at runtime; they may not persist
+across a hosted session, in which case sync degrades gracefully to local-only.
+
+### Run it locally
+
+```bash
+# Backend (from repo root, with the project venv active)
+pip install -r web/backend/requirements.txt
+cd web/backend && PYTHONPATH=. uvicorn nnm_web.app:app --port 8000
+
+# Frontend (separate terminal)
+cd web/frontend && npm install && npm run dev   # dev server proxies /api -> :8000
+```
+
+For a single-process deployment, build the frontend (`npm run build`) — the
+backend serves `web/frontend/dist/` at `/` automatically when present.
+
+Useful environment variables: `NNM_GIT_SYNC_ENABLED` (default on),
+`NNM_GIT_REMOTE`, `NNM_GIT_BRANCH`, `NNM_MAX_UPLOAD_BYTES`, `NNM_UPLOADS_SUBDIR`,
+`NNM_REPORTS_SUBDIR`, `NNM_CONFIG_PATH`, `NNM_REPO_ROOT`.
+
+Tests: `cd web/backend && python -m pytest` (backend);
+`cd web/frontend && npm run typecheck && npm run lint && npm run build`
+(frontend). See [`web/README.md`](web/README.md) for details.
+
 ## Success criteria (prototype)
 
 1. A 60-second bring-up recording exports to EDF/EDF+ with all four channels.
@@ -117,8 +200,10 @@ configs/     montage.yaml, project.example.yaml
 docs/        setup-checklist.md, architecture.md
 src/         nexus_neuromirror/ (config, edf, metrics, markers, verify, viz, report, cli)
 tests/       synthetic-EDF based tests (no private data required)
+web/         FastAPI backend + React/Vite dashboard — see web/README.md
 data/        (git-ignored) recordings — see data/README.md
 reports/     (git-ignored) generated diagnostics — see reports/README.md
+             (exception: synthetic reports/diagnostic_demo/ is committed)
 ```
 
 ## Documentation

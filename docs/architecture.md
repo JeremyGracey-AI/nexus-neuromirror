@@ -162,3 +162,43 @@ localized change:
 
 No code in the current modules assumes files-only I/O beyond `edf.py` and
 `report.py`, which is what makes this path low-risk.
+
+## Web dashboard layer (`web/`)
+
+The web dashboard is a thin delivery layer over the existing package — it adds a
+UI and an upload/sync workflow without changing the analysis contracts.
+
+```mermaid
+flowchart LR
+    U["Browser (React/Vite SPA)<br/>Overview · Upload · Sessions · Detail"] -->|/api| B["FastAPI backend<br/>web/backend/nnm_web"]
+    B --> S["security.py<br/>sanitize · ext · size · SHA-256"]
+    B --> ST["storage.py<br/>catalog + safe artifact paths"]
+    B --> AN["analysis.py"]
+    AN --> RPT["nexus_neuromirror.report<br/>generate_report (MNE)"]
+    B --> G["gitsync.py<br/>add-force · commit · push (graceful)"]
+    ST --> D[("data/uploads/…")]
+    RPT --> R[("reports/uploads/…")]
+    G --> GH[("private GitHub remote")]
+```
+
+**Design principles**
+
+- **Reuse, don't fork.** EDF analysis flows through `report.generate_report`; the
+  backend never re-implements signal logic. The dashboard is one more consumer
+  of the same array/config contracts described above.
+- **Security at the boundary.** All untrusted input (filenames, sizes,
+  extensions, artifact paths) is validated in `security.py` / `storage.py`.
+  Path-traversal is rejected on both upload naming and artifact serving. Raw
+  file contents are never logged.
+- **Fail-safe sync.** `gitsync.py` performs a per-file `git add --force` for the
+  specific accepted upload and its report only, so the data-directory ignore
+  rules stay intact. A missing-credential or push failure preserves the local
+  upload and is surfaced to the UI rather than raised.
+- **Single-user trust model.** There are no accounts; the private authenticated
+  preview/hosting boundary is the access control. This is acceptable for a
+  single-user prototype and is documented as a limitation.
+
+**Deployment note.** For the hosted preview, keep uploads under the proxy's
+10 MB request limit (the app caps at 8 MB). GitHub credentials must be injected
+into the server environment at runtime; if they are unavailable, sync degrades
+gracefully to local-only without data loss.

@@ -34,6 +34,21 @@ data/**
 # Generated reports and diagnostic artifacts (see reports/README.md)
 reports/**
 !reports/README.md
+# Exception: the bundled *synthetic* demo report powers the dashboard Overview
+# page. It contains no real neural data and is safe to commit from a clean
+# checkout. Uploaded-session reports remain ignored and are only added via the
+# per-file safe force-add in the upload path.
+!reports/diagnostic_demo/
+!reports/diagnostic_demo/**
+
+# Web dashboard build/runtime artifacts (see web/README.md)
+web/frontend/node_modules/
+web/frontend/dist/
+web/qa-screenshots/
+web/backend/.qa_uploads/
+web/backend/.qa_reports/
+web/backend/.tmp_uploads/
+web/backend/.tmp_reports/
 
 # OS / editor
 .DS_Store

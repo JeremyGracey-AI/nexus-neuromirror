@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Design tokens: warm-neutral / light + dark, teal primary, rust secondary ---- */
+:root {
+  --bg: 45 20% 96%;
+  --surface: 48 21% 97%;
+  --surface-alt: 60 20% 98%;
+  --border: 44 9% 81%;
+  --text: 42 17% 13%;
+  --text-muted: 40 3% 47%;
+  --text-faint: 45 4% 71%;
+  --primary: 184 98% 22%;
+  --primary-hover: 187 74% 19%;
+  --secondary: 16 62% 32%;
+  --secondary-hover: 16 62% 26%;
+  --error: 320 58% 40%;
+  --warning: 22 71% 34%;
+  --success: 95 56% 30%;
+}
+
+.dark {
+  --bg: 40 8% 9%;
+  --surface: 40 6% 10%;
+  --surface-alt: 40 5% 12%;
+  --border: 40 3% 22%;
+  --text: 40 3% 80%;
+  --text-muted: 40 1% 47%;
+  --text-faint: 40 2% 35%;
+  --primary: 187 34% 47%;
+  --primary-hover: 187 61% 34%;
+  --secondary: 18 45% 52%;
+  --secondary-hover: 18 45% 44%;
+  --error: 320 58% 60%;
+  --warning: 22 51% 48%;
+  --success: 95 42% 47%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: hsl(var(--bg));
+  color: hsl(var(--text));
+  font-family: 'General Sans', 'Satoshi', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+#root {
+  height: 100dvh;
+}
+
+/* Tabular numerals everywhere numbers matter */
+.tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.font-mono {
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+/* Visible, consistent focus rings */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Scrollbar restraint */
+.scroll-region {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.scroll-region::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.scroll-region::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 6px;
+  border: 2px solid hsl(var(--bg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Skeleton shimmer */
+@keyframes nnm-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.skeleton {
+  background: hsl(var(--surface-alt));
+  border-radius: 6px;
+  animation: nnm-pulse 1.4s ease-in-out infinite;
+}
