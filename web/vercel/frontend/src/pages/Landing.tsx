@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { navigate } from '../hooks';
 
 const REPO_URL = 'https://github.com/jeremygracey-ai/nexus-neuromirror';
@@ -13,28 +13,49 @@ function Wordmark({ className = '' }: { className?: string }) {
   );
 }
 
-// One-time split-animation intro. Plays once per session (no storage needed —
-// component state resets on full reload, which is the intended behavior).
+// One-time split-animation intro. Plays once per session, but never blocks the
+// site: it always dismisses — on video end, on error, or after a hard timeout —
+// so a stalled or autoplay-blocked video can't trap the user on the intro.
+const INTRO_MAX_MS = 9000; // split clip is ~8s; guarantee dismissal even if stalled
+
 function Intro({ onDone }: { onDone: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Hard safety timeout — fires regardless of video state.
+    const timer = window.setTimeout(onDone, INTRO_MAX_MS);
+    // Try to start playback; if the browser rejects autoplay, skip the intro.
+    const v = videoRef.current;
+    if (v) {
+      const p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(() => onDone());
+    }
+    return () => window.clearTimeout(timer);
+  }, [onDone]);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#050a17]"
       role="presentation"
+      onClick={onDone}
     >
       <video
+        ref={videoRef}
         className="h-full w-full object-cover"
         src="/brand/nexus_logo_split_animation.mp4"
         poster="/brand/split_poster.jpg"
         autoPlay
         muted
         playsInline
+        preload="auto"
         onEnded={onDone}
+        onError={onDone}
       />
       <button
         onClick={onDone}
-        className="absolute bottom-6 right-6 rounded-full border border-white/25 bg-black/30 px-4 py-1.5 text-xs font-medium text-white/80 backdrop-blur hover:bg-black/50"
+        className="absolute bottom-6 right-6 rounded-full border border-white/30 bg-black/40 px-4 py-2 text-sm font-medium text-white backdrop-blur hover:bg-black/60"
       >
-        Skip intro
+        Skip intro →
       </button>
     </div>
   );
