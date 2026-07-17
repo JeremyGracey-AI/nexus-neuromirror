@@ -16,7 +16,8 @@ function Wordmark({ className = '' }: { className?: string }) {
 // One-time split-animation intro. Plays once per session, but never blocks the
 // site: it always dismisses — on video end, on error, or after a hard timeout —
 // so a stalled or autoplay-blocked video can't trap the user on the intro.
-const INTRO_MAX_MS = 9000; // split clip is ~8s; guarantee dismissal even if stalled
+// Plays ONE cycle, then lands on the static hero — it never loops.
+const INTRO_MAX_MS = 9000; // clip is ~8s; guarantee dismissal even if stalled
 
 function Intro({ onDone }: { onDone: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -42,8 +43,8 @@ function Intro({ onDone }: { onDone: () => void }) {
       <video
         ref={videoRef}
         className="h-full w-full object-cover"
-        src="/brand/nexus_logo_split_animation.mp4"
-        poster="/brand/split_poster.jpg"
+        src="/brand/nexus_intro.mp4"
+        poster="/brand/hero_still.jpg"
         autoPlay
         muted
         playsInline
@@ -68,16 +69,12 @@ export function Landing() {
     <div className="relative h-full w-full overflow-hidden bg-[#050a17] text-white">
       {!introDone && <Intro onDone={() => setIntroDone(true)} />}
 
-      {/* Looping brand animation as hero background */}
-      <video
-        className="absolute inset-0 h-full w-full object-cover opacity-70"
-        src="/brand/nexus_logo_loop_animation.mp4"
-        poster="/brand/loop_poster.jpg"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
+      {/* Static brand hero background (no looping video) */}
+      <img
+        className="absolute inset-0 h-full w-full object-cover"
+        src="/brand/hero_still.jpg"
+        alt=""
+        aria-hidden
       />
       {/* Legibility gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#050a17]/70 via-[#050a17]/40 to-[#050a17]/95" />
