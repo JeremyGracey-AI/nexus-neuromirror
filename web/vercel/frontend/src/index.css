@@ -2,39 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---- Design tokens: warm-neutral / light + dark, teal primary, rust secondary ---- */
+/* ---- Design tokens: NeXus NeuroMirror — electric-blue primary on deep navy ---- */
 :root {
-  --bg: 45 20% 96%;
-  --surface: 48 21% 97%;
-  --surface-alt: 60 20% 98%;
-  --border: 44 9% 81%;
-  --text: 42 17% 13%;
-  --text-muted: 40 3% 47%;
-  --text-faint: 45 4% 71%;
-  --primary: 184 98% 22%;
-  --primary-hover: 187 74% 19%;
-  --secondary: 16 62% 32%;
-  --secondary-hover: 16 62% 26%;
-  --error: 320 58% 40%;
-  --warning: 22 71% 34%;
-  --success: 95 56% 30%;
+  --bg: 210 30% 97%;
+  --surface: 210 33% 99%;
+  --surface-alt: 210 30% 96%;
+  --border: 213 20% 84%;
+  --text: 218 40% 14%;
+  --text-muted: 214 15% 42%;
+  --text-faint: 213 16% 68%;
+  --primary: 208 90% 46%;
+  --primary-hover: 210 92% 38%;
+  --secondary: 192 85% 42%;
+  --secondary-hover: 192 85% 35%;
+  --error: 340 70% 45%;
+  --warning: 30 85% 45%;
+  --success: 160 60% 36%;
 }
 
 .dark {
-  --bg: 40 8% 9%;
-  --surface: 40 6% 10%;
-  --surface-alt: 40 5% 12%;
-  --border: 40 3% 22%;
-  --text: 40 3% 80%;
-  --text-muted: 40 1% 47%;
-  --text-faint: 40 2% 35%;
-  --primary: 187 34% 47%;
-  --primary-hover: 187 61% 34%;
-  --secondary: 18 45% 52%;
-  --secondary-hover: 18 45% 44%;
-  --error: 320 58% 60%;
-  --warning: 22 51% 48%;
-  --success: 95 42% 47%;
+  --bg: 222 55% 6%;
+  --surface: 221 42% 10%;
+  --surface-alt: 220 38% 13%;
+  --border: 216 32% 22%;
+  --text: 210 32% 90%;
+  --text-muted: 214 20% 64%;
+  --text-faint: 216 18% 44%;
+  --primary: 205 100% 62%;
+  --primary-hover: 205 100% 72%;
+  --secondary: 190 90% 56%;
+  --secondary-hover: 190 90% 48%;
+  --error: 340 80% 66%;
+  --warning: 32 85% 60%;
+  --success: 160 60% 52%;
 }
 
 * {

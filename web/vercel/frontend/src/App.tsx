@@ -8,9 +8,10 @@ import { Overview } from './pages/Overview';
 import { UploadPage } from './pages/Upload';
 import { Sessions } from './pages/Sessions';
 import { SessionDetail } from './pages/SessionDetail';
+import { Landing } from './pages/Landing';
 
 const NAV = [
-  { path: '/', label: 'Overview', glyph: '◧' },
+  { path: '/overview', label: 'Overview', glyph: '◧' },
   { path: '/upload', label: 'Upload', glyph: '↑' },
   { path: '/sessions', label: 'Sessions', glyph: '▤' },
 ];
@@ -84,7 +85,7 @@ function PrivacyBanner() {
 
 function Router() {
   const route = useHashRoute();
-  if (route === '/' || route === '') return <Overview />;
+  if (route === '/overview') return <Overview />;
   if (route === '/upload') return <UploadPage />;
   if (route === '/sessions') return <Sessions />;
   if (route.startsWith('/sessions/')) {
@@ -93,7 +94,7 @@ function Router() {
   return (
     <div className="p-8 text-center text-text-muted">
       <p className="text-lg font-medium">Page not found</p>
-      <a href="#/" className="mt-2 inline-block text-primary underline">
+      <a href="#/overview" className="mt-2 inline-block text-primary underline">
         Return to Overview
       </a>
     </div>
@@ -105,8 +106,10 @@ export function App() {
   const [dark, toggleTheme] = useTheme();
   const [mobileNav, setMobileNav] = useState(false);
 
-  const activePath =
-    route.startsWith('/sessions') ? '/sessions' : route === '' ? '/' : route;
+  // Root is the branded landing page; the workbench lives under /overview.
+  if (route === '/' || route === '') return <Landing />;
+
+  const activePath = route.startsWith('/sessions') ? '/sessions' : route;
 
   return (
     <div className="grid h-full grid-rows-[auto_auto_1fr] md:grid-cols-[220px_1fr] md:grid-rows-[auto_1fr]">
@@ -158,7 +161,7 @@ export function App() {
       {/* Header */}
       <header className="flex items-center justify-between border-b border-border bg-surface px-4 py-2.5 md:px-6">
         <h1 className="text-sm font-medium text-text-muted">
-          {activePath === '/' && 'Overview'}
+          {activePath === '/overview' && 'Overview'}
           {activePath === '/upload' && 'Upload recording'}
           {activePath === '/sessions' && 'Session catalog'}
         </h1>
