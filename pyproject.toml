@@ -9,7 +9,7 @@ description = "Four-channel Mind Media NeXus-10 + BioTrace+ AI neurofeedback pro
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "NeXus NeuroMirror contributors" }]
+authors = [{ name = "Jeremy Gracey" }]
 keywords = ["eeg", "neurofeedback", "nexus-10", "biotrace", "mne", "edf"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -40,8 +40,8 @@ dev = [
 nexus-neuromirror = "nexus_neuromirror.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/your-org/nexus-neuromirror"
-Documentation = "https://github.com/your-org/nexus-neuromirror/tree/main/docs"
+Homepage = "https://github.com/JeremyGracey-AI/nexus-neuromirror"
+Documentation = "https://github.com/JeremyGracey-AI/nexus-neuromirror/tree/master/docs"
 
 [tool.setuptools.packages.find]
 where = ["src"]
